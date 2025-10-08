@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cabaran: Siapa Hebat Susun Stok Makanan?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Latar belakang ditukar kepada gambar makanan */
+            background-image: url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        /* Kelas untuk kad kandungan dengan kesan lutsinar */
+        .content-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .footer-text {
+            text-align: center;
+            padding: 1rem;
+            background-color: rgba(243, 244, 246, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #4b5563;
+            font-size: 0.875rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .content-wrapper {
+            padding-bottom: 60px; /* Ketinggian footer */
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div id="content-container" class="content-wrapper">
+
+        <!-- Halaman 1: Muka Depan (Homepage) -->
+        <div id="home-page" class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+            <!-- Kelas 'content-card' ditambah di sini -->
+            <div class="w-full max-w-4xl text-center p-8 rounded-2xl shadow-lg content-card">
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900">Cabaran: Siapa Hebat Susun Stok Makanan?</h1>
+                <p class="mt-4 text-lg sm:text-xl text-gray-600">Senario Mencabar Mengenai Suhu Penyimpanan, FIFO & FEFO</p>
+
+                <!-- Infografik dengan gambar -->
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <img src="https://images.unsplash.com/photo-1579362456496-3e0c9a9b421f?q=80&w=800&auto=format&fit=crop" alt="Infografik Zon Suhu Kritikal Makanan" class="rounded-lg shadow-md w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x250/3B82F6/FFFFFF?text=Zon+Suhu+Kritikal';">
+                        <h3 class="mt-4 text-xl font-semibold">Suhu Kritikal</h3>
+                        <p class="mt-1 text-sm text-gray-600">Kawal suhu untuk elak zon bahaya (5°C - 60°C).</p>
+                    </div>
+                    <div class="text-center">
+                        <img src="https://images.unsplash.com/photo-1586528116311-06924151a758?q=80&w=800&auto=format&fit=crop" alt="Infografik Prinsip FIFO" class="rounded-lg shadow-md w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x250/10B981/FFFFFF?text=Prinsip+FIFO';">
+                        <h3 class="mt-4 text-xl font-semibold">Prinsip FIFO</h3>
+                        <p class="mt-1 text-sm text-gray-600">"Masuk Dulu, Keluar Dulu" - Gunakan stok lama dahulu.</p>
+                    </div>
+                    <div class="text-center">
+                        <img src="https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?q=80&w=800&auto=format&fit=crop" alt="Infografik Prinsip FEFO" class="rounded-lg shadow-md w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x250/8B5CF6/FFFFFF?text=Prinsip+FEFO';">
+                        <h3 class="mt-4 text-xl font-semibold">Prinsip FEFO</h3>
+                        <p class="mt-1 text-sm text-gray-600">"Luput Dulu, Keluar Dulu" - Guna item yang hampir tarikh luput.</p>
+                    </div>
+                </div>
+
+                <button id="start-quiz-btn" class="mt-10 w-full md:w-auto inline-block bg-blue-600 text-white font-bold text-lg py-4 px-10 rounded-lg shadow-md hover:bg-blue-700 transition-transform transform hover:scale-105">
+                    MULA KUIZ SEKARANG
+                </button>
+            </div>
+        </div>
+
+        <!-- Halaman 2: Halaman Kuiz -->
+        <div id="quiz-page" class="hidden min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
+            <!-- Kelas 'content-card' ditambah di sini -->
+            <div class="w-full max-w-2xl p-6 sm:p-8 rounded-2xl shadow-lg content-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 id="question-number" class="text-md font-semibold text-gray-700">Soalan 1 daripada 40</h2>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+                    <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 2.5%"></div>
+                </div>
+                <p id="question-text" class="text-lg font-medium mb-6 min-h-[100px]"></p>
+                <div id="options-container" class="space-y-4"></div>
+                <div id="justification-container" class="hidden mt-6 p-4 border-l-4 rounded-r-lg">
+                    <h4 class="font-bold text-md">Justifikasi:</h4>
+                    <p id="justification-text" class="mt-1 text-sm"></p>
+                </div>
+                <div class="mt-8 flex flex-col sm:flex-row gap-4">
+                    <button id="submit-answer-btn" class="w-full sm:w-1/2 bg-gray-800 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-900 transition">Hantar Jawapan</button>
+                    <button id="next-question-btn" class="w-full sm:w-1/2 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>Soalan Seterusnya</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Halaman 3: Halaman Keputusan -->
+        <div id="results-page" class="hidden min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
+            <!-- Kelas 'content-card' ditambah di sini -->
+            <div class="w-full max-w-lg text-center p-8 rounded-2xl shadow-lg content-card">
+                <h1 class="text-3xl font-bold text-gray-900">Keputusan Kuiz Anda</h1>
+                <div class="my-6">
+                    <p class="text-xl text-gray-700">Anda menjawab</p>
+                    <p id="score-text" class="text-5xl font-extrabold text-blue-600 my-2">0 / 40</p>
+                    <p class="text-xl text-gray-700">soalan dengan betul.</p>
+                </div>
+                <p id="percentage-text" class="text-2xl font-semibold mb-4">(0%)</p>
+                <p id="motivation-text" class="text-lg text-gray-600 mb-8"></p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button id="retry-quiz-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition">Cuba Lagi</button>
+                    <button id="back-to-home-btn" class="w-full bg-gray-200 text-gray-800 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition">Kembali ke Halaman Utama</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer-text">
+        @Ts. Siti Nurul Ain Saipullizan_2025
+    </footer>
+
+    <script>
+        const quizData = [
+            // Bahagian A: Suhu
+            {
+                question: "Sebuah trak penghantaran ayam sejuk tiba lewat 2 jam. Suhu dalaman ayam yang direkodkan ialah 8°C. Apakah tindakan paling tepat yang perlu diambil oleh chef penerima?",
+                options: { A: "Terima penghantaran tetapi masak ayam serta-merta.", B: "Tolak keseluruhan penghantaran kerana berada dalam zon bahaya suhu.", C: "Terima dan sejukkan semula ayam ke suhu 4°C dalam masa 1 jam.", D: "Rundingkan diskaun dengan pembekal dan terima penghantaran." },
+                answer: "B",
+                justification: "Makanan berisiko tinggi seperti ayam mentah tidak boleh berada dalam zon bahaya (5°C - 60°C) untuk tempoh yang lama. Menolaknya adalah amalan paling selamat untuk mengelakkan keracunan makanan."
+            },
+            {
+                question: "Anda sedang menyediakan sup cendawan berkrim secara pukal. Selepas dimasak, suhu sup ialah 90°C. Apakah kaedah penyejukan paling efisien dan selamat sebelum ia disimpan di dalam peti sejuk?",
+                options: { A: "Biarkan sup menyejuk di atas kaunter dapur selama beberapa jam sehingga ia mencapai suhu bilik.", B: "Tuang sup ke dalam bekas-bekas kecil dan cetek, kemudian letakkan di dalam 'ice-water bath'.", C: "Masukkan terus periuk panas ke dalam peti sejuk walk-in untuk mempercepatkan proses penyejukan.", D: "Tutup periuk dengan ketat dan letakkan di dalam bilik sejuk untuk penyejukan secara perlahan." },
+                answer: "B",
+                justification: "Membahagikan kepada bekas kecil meningkatkan luas permukaan untuk penyejukan pantas. Ice-water bath mempercepatkan proses penurunan suhu melepasi zon bahaya."
+            },
+            {
+                question: "Peti sejuk walk-in anda mengalami kerosakan semalaman. Bacaan termometer menunjukkan 10°C. Antara item berikut, yang manakah perlu dibuang serta-merta TANPA kompromi?",
+                options: { A: "Botol sos cili, sos tiram, dan kicap yang belum pernah dibuka.", B: "Sayuran berakar seperti ubi kentang, lobak merah, dan keledek.", C: "Susu segar, keju kotej, dan daging burger mentah.", D: "Balang jem buah-buah, jeruk, dan mentega kacang yang telah dibuka." },
+                answer: "C",
+                justification: "Produk tenusu dan daging mentah adalah Makanan Berisiko Tinggi (TCS Food) yang menyokong pertumbuhan bakteria dengan cepat apabila berada dalam zon bahaya suhu."
+            },
+            {
+                question: "Semasa audit dalaman, anda mendapati log suhu penyejukbeku menunjukkan purata suhu -12°C selama seminggu, bukannya -18°C. Apakah implikasi utama dari penemuan ini?",
+                options: { A: "Tiada implikasi besar kerana suhu masih di bawah takat beku air.", B: "Kualiti sensori (rasa, tekstur) makanan mungkin terjejas dalam jangka panjang, tetapi ia masih selamat dimakan.", C: "Semua makanan tersebut dianggap tidak selamat dan perlu dibuang serta-merta untuk mengelakkan risiko.", D: "Risiko pembentukan kristal ais besar meningkat, merosakkan semua produk tanpa pengecualian." },
+                answer: "B",
+                justification: "Suhu -18°C adalah untuk menghentikan aktiviti enzim dan mengekalkan kualiti. Suhu yang lebih tinggi seperti -12°C tidak akan menyebabkan makanan menjadi tidak selamat, tetapi ia mempercepatkan kemerosotan kualiti."
+            },
+            {
+                question: "Sebuah restoran menggunakan kaedah sous-vide untuk memasak stik. Stik dimasak pada suhu 55°C selama 3 jam. Mengapakah proses ini diterima walaupun berada dalam 'zon bahaya'?",
+                options: { A: "Proses membakar stik pada suhu tinggi selepasnya akan membunuh semua bakteria yang mungkin ada.", B: "Pembungkusan vakum kedap udara dapat menghalang pembiakan semua jenis bakteria patogenik.", C: "Kawalan masa dan suhu yang tepat semasa sous-vide mempasturkan makanan, membunuh patogen walaupun pada suhu rendah.", D: "Zon bahaya suhu tidak terpakai untuk daging yang dimasak dalam bungkusan vakum kedap udara." },
+                answer: "C",
+                justification: "Kaedah sous-vide adalah pengecualian yang dikawal secara saintifik. Gabungan masa dan suhu yang tepat boleh mencapai tahap keselamatan yang sama seperti memasak pada suhu yang lebih tinggi."
+            },
+            {
+                question: "Suhu holding cabinet untuk kentang putar panas tercatat 58°C semasa waktu makan tengah hari. Apakah risiko utama dan tindakan pembetulan yang diperlukan?",
+                options: { A: "Tiada risiko serta-merta, namun suhu perlu dipantau dengan lebih kerap untuk mengelak penurunan lanjut.", B: "Risiko pembiakan bakteria; kentang perlu dipanaskan semula ke 75°C dan suhu kabinet dinaikkan ke atas 63°C.", C: "Risiko utama ialah kualiti produk menurun. Tambah sedikit cecair panas dan naikkan suhu kabinet.", D: "Kentang tersebut perlu dihidangkan segera dalam masa 30 minit sebelum ia menjadi tidak selamat." },
+                answer: "B",
+                justification: "Suhu di bawah 63°C untuk makanan panas adalah di dalam zon bahaya. Makanan perlu dipanaskan semula ke suhu selamat (atas 75°C) dan disimpan pada suhu yang betul (atas 63°C)."
+            },
+            {
+                question: "Anda menerima penghantaran ikan tuna segar. Apakah suhu optimum untuk menyimpan ikan tersebut bagi mengekalkan kesegaran maksimum sebelum diproses?",
+                options: { A: "-5°C hingga 0°C", B: "5°C hingga 8°C", C: "Simpan pada suhu sekitar 0°C, dan pastikan ia dikelilingi oleh ais sepenuhnya.", D: "Antara 1°C hingga 4°C." },
+                answer: "C",
+                justification: "Menyimpan ikan segar pada suhu menghampiri takat beku (0°C) dengan ais memperlahankan aktiviti enzim dan bakteria secara drastik tanpa merosakkan sel seperti pembekuan keras."
+            },
+            {
+                question: "Sebuah katering menyediakan lasagna pada jam 10 pagi untuk majlis jam 7 malam. Apakah prosedur penyimpanan yang betul antara waktu tersebut?",
+                options: { A: "Biarkan ia menyejuk secara semula jadi pada suhu bilik dan hanya panaskan semula apabila majlis bermula.", B: "Sejukkan dengan pantas ke bawah 4°C, simpan di dalam peti sejuk, dan panaskan semula ke sekurang-kurangnya 75°C sebelum dihidangkan.", C: "Terus simpan di dalam kabinet pemanas (holding cabinet) pada suhu 65°C sehingga waktu majlis pada sebelah malam.", D: "Hantar terus ke lokasi majlis selepas masak dan simpan di dalam ketuhar yang dimatikan sehingga perlu dipanaskan." },
+                answer: "B",
+                justification: "Ini adalah amalan terbaik untuk mengelakkan makanan berada dalam zon bahaya terlalu lama. Penyejukan pantas, penyimpanan sejuk, dan pemanasan semula yang betul adalah kunci."
+            },
+            {
+                question: "Apakah tujuan utama melakukan 'kalibrasi termometer' secara berkala di dapur komersial?",
+                options: { A: "Untuk menguji sama ada bateri termometer masih mempunyai kuasa yang mencukupi untuk berfungsi dengan baik.", B: "Bagi memastikan bacaan suhu adalah tepat dan boleh dipercayai untuk tujuan pemantauan keselamatan makanan (HACCP).", C: "Untuk membersihkan probe termometer daripada sebarang sisa makanan yang boleh mencemarkan bacaan seterusnya.", D: "Ia adalah satu prosedur yang dikehendaki oleh pembekal untuk mengekalkan tempoh waranti pada peranti tersebut." },
+                answer: "B",
+                justification: "Termometer yang tidak dikalibrasi boleh memberikan bacaan yang salah, menyebabkan keputusan yang salah dibuat mengenai keselamatan makanan, contohnya, menganggap makanan sudah masak padahal belum."
+            },
+            {
+                question: "Semasa memindahkan stok, sebungkus sosej sejuk terjatuh dan dibiarkan di atas meja penyediaan selama 90 minit pada suhu bilik 25°C. Apakah tindakan paling wajar?",
+                options: { A: "Masukkan semula ke dalam peti sejuk dengan segera untuk disejukkan.", B: "Masak sosej tersebut serta-merta ke suhu yang betul untuk kegunaan staf.", C: "Buang sosej tersebut kerana telah terdedah kepada suhu zon bahaya melebihi had selamat.", D: "Basuh sosej di bawah air mengalir sebelum menyimpannya semula di dalam peti sejuk." },
+                answer: "B",
+                justification: "Walaupun telah terdedah, masa 90 minit masih di bawah 'peraturan 2 jam'. Memasaknya serta-merta ke suhu yang betul akan membunuh sebarang bakteria yang mungkin mula membiak. Membuangnya adalah terlalu membazir pada tahap ini."
+            },
+            {
+                question: "Apakah perbezaan kritikal antara suhu penyimpanan untuk sayur-sayuran berdaun (cth: salad) dan buah-buahan tropika (cth: pisang)?",
+                options: { A: "Tiada perbezaan yang ketara, kedua-dua jenis produk ini perlu disimpan dalam persekitaran sejuk pada 4°C.", B: "Sayuran berdaun memerlukan suhu sejuk (0°C-4°C) dan lembap, manakala pisang akan rosak (chilling injury) pada suhu tersebut.", C: "Pisang perlu sentiasa dibekukan untuk mengelakkan ia menjadi lebam, manakala salad mesti disejukkan dalam air sejuk.", D: "Kedua-dua jenis produk ini paling baik disimpan pada suhu bilik yang kering untuk mengekalkan kesegaran optimum." },
+                answer: "B",
+                justification: "Tidak semua produk segar bertindak balas sama terhadap suhu sejuk. Buah-buahan tropika seperti pisang mengalami kerosakan sel pada suhu sejuk (lebam, hitam), manakala sayuran berdaun memerlukannya untuk kekal rangup."
+            },
+            {
+                question: "Sebuah salad bar di hotel mempamerkan pelbagai jenis potongan buah dan sayur. Apakah suhu maksimum yang dibenarkan untuk piring pameran tersebut?",
+                options: { A: "10°C", B: "8°C", C: "4°C", D: "12°C" },
+                answer: "C",
+                justification: "Walaupun ia adalah sayur dan buah, ia masih dianggap makanan sedia dimakan yang berisiko. Ia mesti dikekalkan pada atau di bawah suhu sejuk yang ditetapkan (4°C) untuk mengelakkan pertumbuhan patogen."
+            },
+            {
+                question: "Mengapakah telur mentah tidak digalakkan disimpan di pintu peti sejuk di persekitaran komersial?",
+                options: { A: "Kerana ia lebih mudah pecah apabila pintu peti sejuk dibuka dan ditutup dengan kerap.", B: "Kerana pintu adalah bahagian yang paling terdedah kepada turun naik suhu semasa peti sejuk dibuka.", C: "Kerana ia boleh menghalang pengedaran udara sejuk yang sekata di dalam peti sejuk.", D: "Kerana ruang di pintu peti sejuk biasanya dikhaskan untuk menyimpan botol minuman." },
+                answer: "B",
+                justification: "Kestabilan suhu adalah penting untuk telur. Bahagian utama peti sejuk mempunyai suhu yang lebih konsisten berbanding pintu, yang menjadi lebih panas setiap kali dibuka."
+            },
+            {
+                question: "Apakah prinsip saintifik di sebalik penggunaan blast chiller di dapur industri?",
+                options: { A: "Ia merupakan satu teknologi canggih yang membekukan makanan pejal sepenuhnya dalam tempoh beberapa saat.", B: "Ia berfungsi dengan cara menyembur gas nitrogen cecair yang sangat sejuk terus ke atas makanan.", C: "Ia mengedarkan udara sejuk berkelajuan tinggi untuk menurunkan suhu makanan melepasi zon bahaya dengan cepat.", D: "Ia adalah nama teknikal untuk peti sejuk jenis 'walk-in' yang mempunyai kapasiti dan saiz yang lebih besar." },
+                answer: "C",
+                justification: "Tujuannya adalah untuk meminimumkan tempoh masa makanan berada dalam zon bahaya suhu, dengan itu mengurangkan peluang pembiakan bakteria secara drastik."
+            },
+            {
+                question: "Makanan dalam tin yang telah kemek teruk di bahagian kelim (seam) harus...",
+                options: { A: "Digunakan dengan segera selagi tiada tanda kebocoran yang jelas kelihatan pada tin tersebut.", B: "Ditolak atau dibuang kerana risiko kebocoran mikro dan kontaminasi bakteria berbahaya (botulism).", C: "Dijual pada harga diskaun kepada pelanggan dengan syarat ia dimaklumkan tentang keadaan tin.", D: "Disimpan seperti biasa di tempat kering dan sejuk kerana kerosakan luaran tidak menjejaskan isi." },
+                answer: "B",
+                justification: "Kerosakan pada kelim tin adalah kritikal kerana ia boleh merosakkan meterai kedap udara, membenarkan kemasukan spora bakteria berbahaya seperti botulism, yang boleh membawa maut."
+            },
+            // Bahagian B: FIFO
+            {
+                question: "Sebuah stor kering menerima penghantaran 10 guni tepung pada 1 Oktober. Stor tersebut masih mempunyai 3 guni tepung dari penghantaran 15 September. Di manakah 10 guni tepung yang baru patut diletakkan?",
+                options: { A: "Di hadapan tepung lama untuk memudahkan akses.", B: "Di belakang atau di bawah tepung lama, supaya tepung lama digunakan dahulu.", C: "Diasingkan di lokasi berbeza untuk mengelakkan kekeliruan.", D: "Di mana-mana selagi ia mudah dicapai." },
+                answer: "B",
+                justification: "Prinsip asas FIFO ialah menyusun stok baru di belakang stok lama untuk memastikan item yang lebih awal diterima akan digunakan terlebih dahulu, mengelakkan kerosakan dan pembaziran."
+            },
+            {
+                question: "Apakah kelemahan utama jika HANYA bergantung pada prinsip FIFO tanpa mempertimbangkan faktor lain?",
+                options: { A: "Sistem ini dianggap terlalu rumit dan sukar untuk diajar kepada pekerja baharu di bahagian stor.", B: "Ia berisiko menyebabkan produk bertarikh luput pendek terperangkap di belakang stok baharu.", C: "Ia akan meningkatkan kos buruh secara mendadak kerana keperluan untuk sentiasa menyusun semula stok.", D: "Sistem ini tidak praktikal dan tidak berkesan untuk digunapakai bagi produk-produk sejukbeku." },
+                answer: "B",
+                justification: "FIFO mengandaikan produk lama akan luput dahulu. Namun, adakalanya stok baru datang dengan tarikh luput yang lebih awal (promosi pembekal, dll.). Di sinilah FEFO menjadi lebih penting."
+            },
+            {
+                question: "Semasa melakukan stock take, anda menjumpai satu kotak pes kari yang diletakkan di bahagian paling belakang, dilabel dengan tarikh penerimaan 6 bulan lebih awal berbanding kotak di hadapannya. Ini menunjukkan kegagalan dalam...",
+                options: { A: "Pengurusan suhu.", B: "Amalan kebersihan diri.", C: "Sistem FIFO dan latihan pekerja.", D: "Kawalan kualiti pembekal." },
+                answer: "C",
+                justification: "Penemuan ini adalah petunjuk jelas bahawa prosedur FIFO tidak dipatuhi, sama ada kerana susunan fizikal yang salah atau pekerja yang tidak dilatih untuk mengambil stok dari belakang."
+            },
+            {
+                question: "Bagaimanakah cara paling berkesan untuk melaksanakan FIFO bagi produk cecair dalam tangki besar (contoh: minyak masak)?",
+                options: { A: "Kosongkan tangki sepenuhnya sebelum mengisi semula.", B: "Gunakan sistem dua tangki: satu untuk kegunaan, satu untuk simpanan, dan gunakannya secara bergilir.", C: "Sentiasa isi semula dari atas dan guna dari atas.", D: "FIFO tidak terpakai untuk produk cecair pukal." },
+                answer: "B",
+                justification: "Untuk memastikan stok lama habis digunakan, sistem bergilir adalah kaedah terbaik. Mengosongkan tangki sepenuhnya juga boleh, tetapi kurang praktikal dalam operasi berterusan."
+            },
+            {
+                question: "Anda perlu melatih staf baru tentang FIFO. Apakah analogi terbaik untuk menjelaskan konsep ini?",
+                options: { A: "Seperti mengisi minyak kereta; yang baru masuk bercampur dengan yang lama.", B: "Seperti barisan orang di kaunter; orang yang pertama beratur akan dilayan dahulu.", C: "Seperti menyusun buku di rak; yang paling menarik diletakkan di hadapan.", D: "Seperti mencuci pakaian; mana yang paling kotor dicuci dahulu." },
+                answer: "B",
+                justification: "Analogi barisan (queue) adalah representasi sempurna bagi konsep First-In, First-Out. Ia mudah difahami dan diingati."
+            },
+            {
+                question: "Dalam sistem inventori digital, apakah data paling penting yang perlu direkodkan semasa penerimaan barang untuk memastikan FIFO boleh diaudit?",
+                options: { A: "Nama pembekal dan harga barang.", B: "Tarikh penerimaan, kuantiti, dan nombor kelompok (batch number).", C: "Saiz dan berat produk.", D: "Nama staf yang menerima barang." },
+                answer: "B",
+                justification: "Tarikh penerimaan adalah teras kepada FIFO. Nombor kelompok membantu dalam pengesanan jika terdapat masalah kualiti atau penarikan balik produk."
+            },
+            {
+                question: "Apakah risiko perniagaan utama jika FIFO diabaikan secara konsisten?",
+                options: { A: "Peningkatan kos utiliti.", B: "Peningkatan kos pelupusan stok tamat tempoh, pembaziran, dan kehilangan keuntungan.", C: "Hubungan buruk dengan pelanggan.", D: "Kesukaran untuk mendapatkan sijil Halal." },
+                answer: "B",
+                justification: "Mengabaikan FIFO secara langsung membawa kepada stok lama yang tidak terjual, akhirnya luput tarikh dan perlu dibuang. Ini adalah kerugian langsung kepada perniagaan."
+            },
+            {
+                question: "Manakah antara produk berikut yang pengurusan FIFO adalah paling kurang kritikal?",
+                options: { A: "Roti segar.", B: "Yogurt.", C: "Garam dan gula pukal.", D: "Daging sejuk." },
+                answer: "C",
+                justification: "Garam dan gula mempunyai jangka hayat yang sangat panjang dan stabil. Walaupun FIFO masih amalan yang baik, ia tidak sekritikal untuk produk mudah rosak yang lain."
+            },
+            {
+                question: "Apakah cabaran terbesar dalam melaksanakan FIFO di dalam freezer walk-in yang padat?",
+                options: { A: "Suhu yang terlalu sejuk untuk bekerja lama.", B: "Kekurangan ruang untuk menyusun semula stok berat dan beku.", C: "Produk cenderung melekat antara satu sama lain.", D: "Pencahayaan yang kurang baik." },
+                answer: "B",
+                justification: "Secara fizikal, memindahkan kotak-kotak beku yang berat dalam ruang terhad untuk meletakkan stok baru di belakang adalah cabaran logistik dan tenaga kerja yang signifikan."
+            },
+            {
+                question: "Sistem pelabelan yang baik adalah kunci kepada FIFO. Apakah maklumat yang paling penting untuk dilabel pada bekas makanan yang telah diproses di dapur (contoh: sos Bolognese)?",
+                options: { A: "Nama chef yang memasaknya.", B: "Nama produk dan tarikh ia disediakan.", C: "Senarai bahan-bahan.", D: "Waktu ia dimasak." },
+                answer: "B",
+                justification: "Nama produk adalah untuk identifikasi, dan tarikh penyediaan adalah data utama untuk melaksanakan FIFO dengan betul bagi item yang diproses secara dalaman."
+            },
+            // Bahagian C: FEFO
+            {
+                question: "Anda menerima dua kumpulan susu segar pada hari yang sama. Kumpulan A (dari Pembekal X) mempunyai tarikh luput 15 Oktober. Kumpulan B (dari Pembekal Y) mempunyai tarikh luput 12 Oktober. Menggunakan prinsip FEFO, susu dari kumpulan mana yang perlu diletakkan di hadapan?",
+                options: { A: "Kumpulan A kerana ia dari pembekal utama.", B: "Kumpulan B kerana tarikh luputnya lebih awal.", C: "Campurkan kedua-dua kumpulan kerana diterima pada hari yang sama.", D: "Kumpulan mana yang sampai dahulu (FIFO)." },
+                answer: "B",
+                justification: "FEFO mengatasi FIFO. Prioriti diberikan kepada produk yang akan luput terlebih dahulu, tidak kira bila ia diterima."
+            },
+            {
+                question: "Dalam situasi manakah FEFO adalah lebih superior berbanding FIFO?",
+                options: { A: "Apabila semua produk yang diterima dalam satu penghantaran mempunyai jangka hayat yang sama dan panjang.", B: "Untuk produk makanan dan farmaseutikal yang mempunyai label tarikh luput yang spesifik.", C: "Apabila menguruskan inventori untuk barangan tidak mudah rosak seperti peralatan dapur atau pinggan mangkuk.", D: "Apabila menguruskan stok sayur-sayuran segar yang biasanya tidak mempunyai label tarikh luput." },
+                answer: "B",
+                justification: "FEFO direka khusus untuk menguruskan item yang mempunyai tarikh luput. Ia memastikan keselamatan dan kualiti produk dipelihara dengan menggunakan item yang paling hampir dengan tarikh luputnya."
+            },
+            {
+                question: "Sebuah pasar raya menerima stok promosi yogurt (Beli 1 Percuma 1) dari pembekal. Stok promosi ini mempunyai tarikh luput 3 minggu lagi, manakala stok sedia ada di rak mempunyai tarikh luput 5 minggu lagi. Apakah tindakan paling strategik?",
+                options: { A: "Ikut prinsip FIFO dengan menjual stok sedia ada di rak terlebih dahulu sebelum meletakkan stok baru.", B: "Laksanakan FEFO dengan meletakkan stok promosi di hadapan dan maklumkan pelanggan tarikh luputnya.", C: "Tolak stok promosi tersebut kerana ia boleh menyebabkan kekeliruan dan pembaziran di kemudian hari.", D: "Campurkan sahaja semua stok promosi dan stok sedia ada di rak untuk mempercepatkan jualan." },
+                answer: "B",
+                justification: "Ini adalah senario klasik di mana FEFO penting untuk mengelakkan pembaziran stok promosi. Komunikasi yang jelas kepada pelanggan adalah kunci."
+            },
+            {
+                question: "Apakah perisian atau teknologi yang boleh membantu automasi pelaksanaan FEFO dalam gudang besar?",
+                options: { A: "Sistem kamera litar tertutup (CCTV) untuk memantau pergerakan stok di dalam gudang.", B: "Sistem Pengurusan Gudang (WMS) yang menjejaki tarikh luput setiap item melalui kod bar.", C: "Penggunaan termometer inframerah untuk memeriksa suhu stok dari jarak jauh.", D: "Penggunaan mesin pembungkusan vakum untuk memanjangkan jangka hayat semua produk." },
+                answer: "B",
+                justification: "WMS yang canggih boleh mengarahkan pekerja untuk mengambil item dari lokasi yang betul berdasarkan data tarikh luput yang disimpan dalam sistem, menjadikan FEFO lebih efisien dan kurang terdedah kepada kesilapan manusia."
+            },
+            {
+                question: "Seorang pekerja mendapati satu tin buah pic di stor dengan tarikh 'Baik Sebelum' (Best Before) seminggu yang lalu. Apakah tindakan yang betul?",
+                options: { A: "Buang tin tersebut serta-merta kerana ia dianggap tidak lagi selamat untuk sebarang jenis kegunaan.", B: "Asingkan, periksa kualitinya; jika baik, guna untuk staf atau derma, tetapi jangan jual kepada pelanggan.", C: "Letakkan semula tin itu ke bahagian hadapan rak supaya ia menjadi item pertama yang dibeli oleh pelanggan.", D: "Abaikan sahaja tarikh tersebut kerana label 'Baik Sebelum' hanyalah cadangan kualiti dari pengilang." },
+                answer: "B",
+                justification: "'Baik Sebelum' berkaitan dengan kualiti, bukan keselamatan. Produk mungkin masih selamat dimakan tetapi kualitinya menurun. Amalan terbaik adalah tidak menjualnya kepada pelanggan tetapi menilainya untuk kegunaan lain jika selamat."
+            },
+            {
+                question: "Apakah perbezaan perundangan antara tarikh 'Guna Sebelum' (Use By) dan 'Baik Sebelum' (Best Before)?",
+                options: { A: "Kedua-dua tarikh ini tidak mempunyai perbezaan yang ketara dan membawa maksud yang hampir sama.", B: "'Guna Sebelum' adalah tentang keselamatan, manakala 'Baik Sebelum' adalah tentang kualiti optimum produk.", C: "Label 'Baik Sebelum' dikhaskan untuk produk kering, manakala label 'Guna Sebelum' adalah untuk produk basah.", D: "Tarikh 'Guna Sebelum' ditetapkan oleh kerajaan, manakala 'Baik Sebelum' ditetapkan oleh pengilang." },
+                answer: "B",
+                justification: "Ini adalah perbezaan asas yang kritikal. Melanggar tarikh 'Guna Sebelum' adalah satu kesalahan dan berisiko tinggi, manakala melanggar tarikh 'Baik Sebelum' lebih kepada isu kualiti."
+            },
+            {
+                question: "Apakah langkah pertama yang perlu dilakukan oleh seorang pengurus apabila menerima barang yang mempunyai tarikh luput kurang dari 30 hari, sedangkan polisi syarikat menetapkan minima 60 hari?",
+                options: { A: "Terima barang dan cuba jual dengan cepat.", B: "Tolak penghantaran tersebut dan maklumkan kepada jabatan perolehan serta pembekal.", C: "Simpan barang tersebut di stor berasingan.", D: "Minta diskaun daripada pembekal." },
+                answer: "B",
+                justification: "Mematuhi polisi penerimaan adalah langkah pertama dalam kawalan kualiti dan inventori. Menerima stok dengan hayat rak yang pendek akan mengganggu sistem FEFO dan berisiko menyebabkan kerugian."
+            },
+            {
+                question: "Sebuah kilang roti menghasilkan 1,000 buku roti setiap hari. Bagaimanakah cara mereka memastikan pengedar dan peruncit mengamalkan FEFO?",
+                options: { A: "Pihak kilang tidak boleh berbuat apa-apa selepas produk tersebut dijual kepada pengedar.", B: "Cetak tarikh luput dengan jelas pada bungkusan dan sediakan latihan kepada pihak peruncit.", C: "Hanya menghantar bekalan roti yang mempunyai tarikh luput yang paling hampir kepada semua kedai.", D: "Menggunakan sistem pulangan semula untuk semua roti yang tidak berjaya dijual oleh peruncit." },
+                answer: "B",
+                justification: "Pengilang memainkan peranan penting dalam memudahkan FEFO di peringkat seterusnya. Pelabelan yang jelas adalah langkah paling asas dan penting. Latihan dan sistem pulangan (pilihan D juga relevan) menyokong amalan ini."
+            },
+            {
+                question: "Apakah kesan psikologi kepada pengguna jika mereka sering melihat produk yang hampir tamat tempoh di bahagian hadapan rak?",
+                options: { A: "Mereka akan membeli lebih banyak.", B: "Ia boleh menjejaskan persepsi mereka terhadap kesegaran dan kualiti keseluruhan kedai tersebut.", C: "Mereka tidak akan perasan.", D: "Mereka akan gembira kerana boleh mendapat diskaun." },
+                answer: "B",
+                justification: "Pengurusan stok yang lemah (walaupun mengikut FEFO) boleh memberi gambaran negatif kepada pelanggan bahawa kedai tersebut tidak menjual produk segar atau mempunyai perolehan stok yang perlahan."
+            },
+            // Bahagian D: Senario Integrasi
+            {
+                question: "Anda menguruskan sebuah bilik sejuk (chiller). Terdapat 3 kotak dada ayam: Kotak A (diterima semalam, luput 20 Okt), Kotak B (diterima 3 hari lalu, luput 18 Okt), dan Kotak C (diterima hari ini, luput 22 Okt). Tiba-tiba, suhu bilik sejuk naik ke 8°C selama 4 jam. Apakah gabungan tindakan yang paling tepat?",
+                options: { A: "Abaikan sahaja kenaikan suhu tersebut, dan terus susun semula stok mengikut prinsip FIFO (B, A, C).", B: "Periksa suhu ayam, jika selamat, susun ikut FEFO (B, A, C), dan panggil juruteknik untuk pembaikan.", C: "Buang kesemua stok ayam tersebut dengan serta-merta dan terus failkan tuntutan insurans syarikat.", D: "Masak semua ayam dari Kotak B dengan segera dan susun semula baki stok mengikut prinsip FEFO." },
+                answer: "B",
+                justification: "Senario ini menguji ketiga-tiga aspek. Pertama, sahkan keselamatan produk akibat masalah suhu. Kedua, jika selamat, laksanakan prinsip penggiliran stok yang betul (FEFO, kerana tarikh luput diberikan). Ketiga, ambil tindakan pembetulan untuk peralatan."
+            },
+            {
+                question: "Sebuah kafe menerima penghantaran keju brie. Tarikh penerimaan ialah 1 Oktober dengan tarikh luput 30 Oktober. Ia diletakkan di belakang keju sedia ada yang diterima pada 25 September dengan tarikh luput 5 November. Suhu peti sejuk sentiasa konsisten pada 4°C. Apakah kesilapan yang telah berlaku?",
+                options: { A: "Terdapat kesilapan pada suhu penyimpanan peti sejuk yang ditetapkan untuk produk keju.", B: "Tiada sebarang kesilapan telah berlaku kerana prinsip FIFO telah dipatuhi dengan betul.", C: "Kesilapan FEFO; keju yang luput lebih awal (30 Okt) sepatutnya diletakkan di bahagian hadapan.", D: "Produk keju jenis ini tidak sepatutnya disimpan pada suhu serendah 0°C untuk jangka masa lama." },
+                answer: "C",
+                justification: "Ini adalah contoh klasik di mana pematuhan buta kepada FIFO adalah salah. Tarikh luput mesti menjadi keutamaan. Walaupun suhu betul (0°C - 4°C), amalan pusingan stok adalah salah."
+            },
+            {
+                question: "Anda adalah pengurus stor. Anda mempunyai lebihan stok tomato dalam tin (diterima 6 bulan lalu, luput tahun depan) dan juga stok puri tomato segar (dibuat semalam, perlu digunakan dalam 3 hari). Chef anda meminta bekalan tomato untuk membuat sos pasta. Apakah yang akan anda berikan kepadanya?",
+                options: { A: "Tomato dalam tin, mengikut prinsip FIFO.", B: "Puri tomato segar, mengikut prinsip FEFO (jangka hayat paling pendek).", C: "Campuran kedua-duanya untuk menjimatkan kos.", D: "Tanya chef mana yang beliau lebih suka." },
+                answer: "B",
+                justification: "Walaupun tomato dalam tin 'masuk dahulu', puri segar mempunyai jangka hayat yang sangat pendek. FEFO (atau prinsip jangka hayat terpendek) perlu diutamakan untuk mengelakkan pembaziran produk segar."
+            },
+            {
+                question: "Log suhu penyejukbeku menunjukkan bacaan -10°C selama dua hari sebelum kembali ke -18°C. Di dalamnya terdapat aiskrim (diterima 2 minggu lalu, luput dalam 6 bulan) dan udang beku (diterima seminggu lalu, luput dalam 3 bulan). Apakah kebimbangan utama anda?",
+                options: { A: "Anda perlu memberi keutamaan untuk menggunakan stok udang beku terlebih dahulu kerana tarikh luputnya lebih pendek.", B: "Kenaikan suhu boleh merosakkan kualiti aiskrim dan menjejaskan keselamatan udang beku (nyahbeku separa).", C: "Kedua-dua produk ini dianggap masih selamat sepenuhnya kerana suhu tidak pernah mencapai takat 0°C.", D: "Tindakan paling utama ialah menyusun semula semua stok di dalam penyejukbeku itu mengikut prinsip FIFO." },
+                answer: "B",
+                justification: "Soalan ini menggabungkan kesan suhu terhadap produk yang berbeza, serta prinsip pusingan stok. Isu utama di sini ialah kesan turun naik suhu terhadap keselamatan dan kualiti, yang mengatasi isu FIFO/FEFO buat masa ini. Penilaian produk menjadi keutamaan."
+            },
+            {
+                question: "Sebuah stor sejuk menyimpan dua kumpulan fillet ikan salmon pada suhu 3°C. Kumpulan A diterima pada 5 Oktober (luput 10 Oktober), manakala Kumpulan B diterima pada 3 Oktober (luput 12 Oktober). Fillet manakah yang patut digunakan dahulu?",
+                options: { A: "Gunakan Kumpulan B kerana ia diterima lebih awal, mengikut amalan FIFO yang standard.", B: "Gunakan Kumpulan A kerana tarikh luputnya adalah lebih pendek, mengikut prinsip FEFO.", C: "Campurkan kedua-dua kumpulan kerana suhu penyimpanan adalah betul dan selamat.", D: "Gunakan Kumpulan A kerana ia adalah stok yang lebih baharu dan lebih segar untuk pelanggan." },
+                answer: "B",
+                justification: "Prinsip FEFO (First-Expired, First-Out) mengatasi FIFO dalam kes ini. Produk yang akan tamat tempoh dahulu mesti digunakan terlebih dahulu untuk memastikan keselamatan dan mengelakkan pembaziran."
+            },
+            {
+                question: "Semasa waktu makan tengah hari yang sibuk, seorang chef mengeluarkan bekas besar berisi sos bolognese yang telah dimasak dari peti sejuk (4°C). Setelah menggunakan separuh, bekas itu dibiarkan di atas meja selama 2.5 jam pada suhu bilik 28°C. Apakah tindakan yang betul untuk baki sos tersebut?",
+                options: { A: "Letakkan semula ke dalam peti sejuk dengan segera untuk digunakan semasa makan malam.", B: "Panaskan semula keseluruhan sos ke suhu 75°C sebelum menyejukkannya kembali untuk disimpan.", C: "Sos tersebut mesti dibuang kerana telah berada di zon bahaya suhu melebihi had masa selamat.", D: "Gunakan baki sos dengan segera untuk pesanan seterusnya tanpa perlu memanaskannya semula." },
+                answer: "C",
+                justification: "Sos telah berada dalam zon bahaya suhu (5°C - 60°C) melebihi had kumulatif 2 jam yang disyorkan. Untuk memastikan keselamatan makanan, ia mesti dibuang."
+            }
+        ];
+
+        // Elemen DOM
+        const homePage = document.getElementById('home-page');
+        const quizPage = document.getElementById('quiz-page');
+        const resultsPage = document.getElementById('results-page');
+        const startQuizBtn = document.getElementById('start-quiz-btn');
+        const questionNumber = document.getElementById('question-number');
+        const progressBar = document.getElementById('progress-bar');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const justificationContainer = document.getElementById('justification-container');
+        const justificationText = document.getElementById('justification-text');
+        const submitAnswerBtn = document.getElementById('submit-answer-btn');
+        const nextQuestionBtn = document.getElementById('next-question-btn');
+        const scoreText = document.getElementById('score-text');
+        const percentageText = document.getElementById('percentage-text');
+        const motivationText = document.getElementById('motivation-text');
+        const retryQuizBtn = document.getElementById('retry-quiz-btn');
+        const backToHomeBtn = document.getElementById('back-to-home-btn');
+
+        // State Kuiz
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answerSubmitted = false;
+        let selectedOptionElement = null;
+
+        // Fungsi-fungsi
+        function startQuiz() {
+            homePage.classList.add('hidden');
+            quizPage.classList.remove('hidden');
+            resultsPage.classList.add('hidden');
+            currentQuestionIndex = 0;
+            score = 0;
+            loadQuestion();
+        }
+        
+        function loadQuestion() {
+            answerSubmitted = false;
+            selectedOptionElement = null;
+            justificationContainer.classList.add('hidden');
+            const currentQuestion = quizData[currentQuestionIndex];
+            questionNumber.textContent = `Soalan ${currentQuestionIndex + 1} daripada ${quizData.length}`;
+            const progress = ((currentQuestionIndex + 1) / quizData.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            questionText.textContent = currentQuestion.question;
+            optionsContainer.innerHTML = '';
+            for (const key in currentQuestion.options) {
+                const optionDiv = document.createElement('div');
+                optionDiv.innerHTML = `
+                    <input type="radio" id="option${key}" name="answer" value="${key}" class="hidden peer">
+                    <label for="option${key}" class="flex items-center p-4 border rounded-lg cursor-pointer peer-checked:bg-blue-100 peer-checked:border-blue-500 hover:bg-gray-50 transition">
+                        <span class="font-bold mr-4">${key}.</span>
+                        <span>${currentQuestion.options[key]}</span>
+                    </label>
+                `;
+                optionsContainer.appendChild(optionDiv);
+            }
+            submitAnswerBtn.disabled = false;
+            nextQuestionBtn.disabled = true;
+            document.querySelectorAll('input[name="answer"]').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    selectedOptionElement = e.target.parentElement.querySelector('label');
+                });
+            });
+        }
+        
+        function submitAnswer() {
+            if (answerSubmitted) return;
+            const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+            if (!selectedAnswer) return;
+            answerSubmitted = true;
+            submitAnswerBtn.disabled = true;
+            nextQuestionBtn.disabled = false;
+            const currentQuestion = quizData[currentQuestionIndex];
+            const correctOptionLabel = document.querySelector(`label[for="option${currentQuestion.answer}"]`);
+            if (selectedAnswer.value === currentQuestion.answer) {
+                score++;
+                selectedOptionElement.classList.remove('peer-checked:bg-blue-100', 'peer-checked:border-blue-500');
+                selectedOptionElement.classList.add('bg-green-100', 'border-green-500');
+            } else {
+                selectedOptionElement.classList.remove('peer-checked:bg-blue-100', 'peer-checked:border-blue-500');
+                selectedOptionElement.classList.add('bg-red-100', 'border-red-500');
+                correctOptionLabel.classList.add('bg-green-100', 'border-green-500');
+            }
+            justificationText.textContent = currentQuestion.justification;
+            justificationContainer.classList.remove('hidden');
+            justificationContainer.className = 'mt-6 p-4 border-l-4 rounded-r-lg';
+            justificationContainer.classList.add(selectedAnswer.value === currentQuestion.answer ? 'border-green-500' : 'border-red-500');
+            justificationContainer.classList.add(selectedAnswer.value === currentQuestion.answer ? 'bg-green-50' : 'bg-red-50');
+            document.querySelectorAll('input[name="answer"]').forEach(radio => radio.disabled = true);
+            if (currentQuestionIndex === quizData.length - 1) {
+                nextQuestionBtn.textContent = 'Lihat Keputusan';
+            }
+        }
+        
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            quizPage.classList.add('hidden');
+            resultsPage.classList.remove('hidden');
+            const percentage = Math.round((score / quizData.length) * 100);
+            scoreText.textContent = `${score} / ${quizData.length}`;
+            percentageText.textContent = `(${percentage}%)`;
+            percentageText.className = 'text-2xl font-semibold mb-4'; // Reset classes
+            if (percentage >= 80) {
+                motivationText.textContent = "Cemerlang! Pengetahuan anda dalam keselamatan makanan adalah di tahap pakar.";
+                percentageText.classList.add('text-green-600');
+            } else if (percentage >= 50) {
+                motivationText.textContent = "Baik! Teruskan belajar untuk menjadi pakar dalam keselamatan makanan.";
+                percentageText.classList.add('text-yellow-600');
+            } else {
+                motivationText.textContent = "Jangan berputus asa! Ulangi ini untuk mengukuhkan pemahaman anda.";
+                percentageText.classList.add('text-red-600');
+            }
+            nextQuestionBtn.textContent = 'Soalan Seterusnya';
+        }
+        
+        function backToHome() {
+            resultsPage.classList.add('hidden');
+            homePage.classList.remove('hidden');
+        }
+
+        // Event Listeners
+        startQuizBtn.addEventListener('click', startQuiz);
+        submitAnswerBtn.addEventListener('click', submitAnswer);
+        nextQuestionBtn.addEventListener('click', nextQuestion);
+        retryQuizBtn.addEventListener('click', startQuiz);
+        backToHomeBtn.addEventListener('click', backToHome);
+    </script>
+</body>
+</html>
+
+
+
